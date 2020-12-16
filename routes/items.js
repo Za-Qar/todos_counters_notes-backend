@@ -7,9 +7,10 @@ const {
   createCounter,
   incrementCounter,
   decrementCounter,
-  getMaxid,
+  getMaxidCounters,
   deleteTodo,
   getMaxTodoId,
+  getAllCounters,
 } = require("../models/items");
 
 /* GET home page. */
@@ -18,12 +19,18 @@ router.get("/", async function (req, res) {
   res.json({ success: true, payload: items });
 });
 
+/* GET All Counters. */
+router.get("/allCounters", async function (req, res) {
+  const items = await getAllCounters();
+  res.json({ success: true, payload: items });
+});
+
 router.post("/createTodo", async function (req, res) {
   console.log("this is the post");
   let body = req.body;
-  if (!body.todo) {
-    return res.send("404 Error");
-  }
+  // if (!body.todo) {
+  //   return res.send("404 Error");
+  // }
   const items = await createTodo(body.todo);
   console.log("router", items);
   console.log("router", body);
@@ -55,8 +62,8 @@ router.patch("/decremet/:id", async function (req, res) {
   return res.json({ success: true });
 });
 
-router.get("/maxId", async function (req, res) {
-  const id = await getMaxid();
+router.get("/maxIdCounters", async function (req, res) {
+  const id = await getMaxidCounters();
   res.json({ success: true, payload: id });
 });
 

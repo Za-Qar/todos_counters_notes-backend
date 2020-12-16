@@ -2,9 +2,11 @@ const { query } = require("../index");
 
 async function createTableTodo() {
   let res = await query(
-    `CREATE TABLE todos(
+    `CREATE TABLE todos_react(
             id SERIAL PRIMARY KEY,
-            todo TEXT
+            todo TEXT,
+            color TEXT,
+            status TEXT
         )`
   );
   console.log(res);
@@ -14,10 +16,12 @@ createTableTodo();
 
 async function createTableCounter() {
   let res = await query(
-    `CREATE TABLE counters(
+    `CREATE TABLE counters_react(
       id SERIAL PRIMARY KEY,
       counter TEXT,
-      count INTEGER
+      count INTEGER,
+      color TEXT,
+      status TEXT
     )`
   );
   console.log(res);

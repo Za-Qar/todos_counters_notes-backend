@@ -2,19 +2,27 @@ const { query } = require("../db/index.js");
 
 //Get all todos
 async function getAllData() {
-  const res = await query(`SELECT * FROM todos `);
+  const res = await query(`SELECT * FROM todos_react`);
+  console.log(res.rows);
+  return res.rows;
+}
+
+//Get all todosCounters
+async function getAllCounters() {
+  const res = await query(`SELECT * FROM counters_react`);
+  console.log(res.rows);
   return res.rows;
 }
 
 //Post todo value to db
 async function createTodo(value) {
   const res = await query(
-    `INSERT INTO todos (todo)
+    `INSERT INTO todos_react (todo)
         values ($1)`,
     [value]
   );
-  console.log("models", value);
-  return res; //why res.rows?
+
+  return res;
 }
 
 //Post counter value to DB
@@ -23,7 +31,7 @@ async function createCounter(value) {
   console.log("models", value.counter);
   console.log("models", value.zero);
   const res = await query(
-    `INSERT INTO counters (counter, count)
+    `INSERT INTO counters_react (counter, count)
         values ($1, $2)`,
     [value.counter, value.zero]
   );
@@ -33,7 +41,7 @@ async function createCounter(value) {
 //Increment counter by id
 async function incrementCounter(id) {
   const res = await query(
-    `UPDATE counters
+    `UPDATE counters_react
       SET count = count + 1
       WHERE id = ${id}`
   );
@@ -44,7 +52,7 @@ async function incrementCounter(id) {
 //Decrement counter by id
 async function decrementCounter(id) {
   const res = await query(`
-  UPDATE counters
+  UPDATE counters_react
   SET count = count - 1
   WHERE id = ${id}`);
   console.log("models - decrement cointer", id);
@@ -52,9 +60,9 @@ async function decrementCounter(id) {
 }
 
 //Get newest counter id
-async function getMaxid() {
+async function getMaxidCounters() {
   const res = await query(
-    `SELECT id FROM counters WHERE id=(SELECT max(id) FROM counters)`
+    `SELECT id FROM counters_react WHERE id=(SELECT max(id) FROM counters_react)`
   );
   console.log("max id result", res.rows[0].id);
   return { success: true, payload: res.rows[0].id };
@@ -62,7 +70,8 @@ async function getMaxid() {
 
 //Delete todo from db
 async function deleteTodo(id) {
-  const res = await query(`DELETE FROM todos WHERE id=${id};`);
+  console.log("This is the id that I am recieving here ----------", id);
+  const res = await query(`DELETE FROM todos_react WHERE id=${id};`);
   console.log("delete id", res);
   return res;
 }
@@ -70,7 +79,7 @@ async function deleteTodo(id) {
 //Get newest todo id
 async function getMaxTodoId() {
   const res = await query(
-    `SELECT id FROM todos WHERE id=(SELECT max(id) FROM todos)`
+    `SELECT id FROM todos_react WHERE id=(SELECT max(id) FROM todos_react)`
   );
   console.log("max id result", res.rows[0].id);
   return res.rows;
@@ -82,7 +91,8 @@ module.exports = {
   createCounter,
   incrementCounter,
   decrementCounter,
-  getMaxid,
+  getMaxidCounters,
   deleteTodo,
   getMaxTodoId,
+  getAllCounters,
 };
