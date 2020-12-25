@@ -1,18 +1,6 @@
 const { query } = require("../db/index.js");
 
-//Get all todos
-async function getAllData() {
-  const res = await query(`SELECT * FROM todos_react`);
-  console.log(res.rows);
-  return res.rows;
-}
-
-//Get all todosCounters
-async function getAllCounters() {
-  const res = await query(`SELECT * FROM counters_react`);
-  console.log(res.rows);
-  return res.rows;
-}
+/*------------Todos------------*/
 
 //Post todo value to db
 async function createTodo(value) {
@@ -25,11 +13,31 @@ async function createTodo(value) {
   return res;
 }
 
+//Get newest todo id
+async function getMaxTodoId() {
+  const res = await query(
+    `SELECT id FROM todos_react WHERE id=(SELECT max(id) FROM todos_react)`
+  );
+  return res.rows;
+}
+
+//Get all todos
+async function getAllData() {
+  const res = await query(`SELECT * FROM todos_react`);
+  console.log(res.rows);
+  return res.rows;
+}
+
+//Delete todo from db
+async function deleteTodo(id) {
+  const res = await query(`DELETE FROM todos_react WHERE id=${id};`);
+  console.log("deleted todo id, models/items.js deleteTodo function: ", res);
+  return res;
+}
+
+/*------------Counters------------*/
 //Post counter value to DB
 async function createCounter(value) {
-  console.log("models", value);
-  console.log("models", value.counter);
-  console.log("models", value.zero);
   const res = await query(
     `INSERT INTO counters_react (counter, count)
         values ($1, $2)`,
@@ -55,7 +63,7 @@ async function decrementCounter(id) {
   UPDATE counters_react
   SET count = count - 1
   WHERE id = ${id}`);
-  console.log("models - decrement cointer", id);
+  console.log("models - decrement counter", id);
   return res;
 }
 
@@ -64,35 +72,80 @@ async function getMaxidCounters() {
   const res = await query(
     `SELECT id FROM counters_react WHERE id=(SELECT max(id) FROM counters_react)`
   );
-  console.log("max id result", res.rows[0].id);
-  return { success: true, payload: res.rows[0].id };
-}
-
-//Delete todo from db
-async function deleteTodo(id) {
-  console.log("This is the id that I am recieving here ----------", id);
-  const res = await query(`DELETE FROM todos_react WHERE id=${id};`);
-  console.log("delete id", res);
-  return res;
-}
-
-//Get newest todo id
-async function getMaxTodoId() {
-  const res = await query(
-    `SELECT id FROM todos_react WHERE id=(SELECT max(id) FROM todos_react)`
-  );
-  console.log("max id result", res.rows[0].id);
   return res.rows;
 }
 
+//Delete counter from db
+async function deleteCounter(id) {
+  console.log("counter id to be deleted", id);
+  const res = await query(`DELETE FROM counters_react WHERE id=${id};`);
+  console.log("delete id from deleteCounter in models/items.js: ", res);
+  return res;
+}
+
+//Get all Counters
+async function getAllCounters() {
+  const res = await query(`SELECT * FROM counters_react`);
+  console.log("This is the get all counters id", res.rows);
+  return res.rows;
+}
+
+/*---------------Notes-----------------*/
+//POST note
+async function createNote(value) {
+  console.log(
+    "this is the value and textValue in models/items.js line 98: ",
+    value
+  );
+  const res = await query(
+    `INSERT INTO notes_react (title, text)
+        values ($1, $2)`,
+    [value.title, value.text]
+  );
+  return res;
+}
+
+//GET newest note id
+async function getMaxNoteId() {
+  const res = await query(
+    `SELECT id FROM notes_react WHERE id=(SELECT max(id) FROM notes_react)`
+  );
+  return res.rows;
+}
+
+//GET all notes
+async function getAllNotes() {
+  const res = await query(`SELECT * FROM notes_react`);
+  console.log("This is the get all notes id", res.rows);
+  return res.rows;
+}
+
+//DELETE note from db
+async function deleteNote(id) {
+  console.log(
+    "------------------------------------note id to be deleted: ",
+    id
+  );
+  const res = await query(`DELETE FROM notes_react WHERE id=${id};`);
+  console.log("delete id from deleteNote in models/items.js: ", res);
+  return res;
+}
+
 module.exports = {
-  getAllData,
   createTodo,
+  getMaxTodoId,
+  getAllData,
+  deleteTodo,
+
   createCounter,
   incrementCounter,
   decrementCounter,
   getMaxidCounters,
-  deleteTodo,
-  getMaxTodoId,
+  deleteCounter,
   getAllCounters,
+
+  createNote,
+  getMaxNoteId,
+  getAllNotes,
+  deleteNote,
 };

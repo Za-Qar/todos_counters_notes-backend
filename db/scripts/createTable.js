@@ -29,8 +29,23 @@ async function createTableCounter() {
 
 createTableCounter();
 
+async function createTableNotes() {
+  let res = await query(
+    `CREATE TABLE notes_react(
+      id SERIAL PRIMARY KEY,
+      title TEXT,
+      text TEXT,
+      color TEXT,
+      status TEXT
+    )`
+  );
+  console.log(res);
+}
+
+createTableNotes();
+
 // async function dropItems() {
-//   let res = await query(`DROP TABLE todos `);
+//   let res = await query(`DROP TABLE notes_react `);
 //   console.log(res);
 // }
 // dropItems();
