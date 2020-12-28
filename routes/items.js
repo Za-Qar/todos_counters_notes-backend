@@ -93,6 +93,7 @@ router.patch("/counter/decremet/:id", async function (req, res) {
 //GET counter max id
 router.get("/counter/maxIdCounters", async function (req, res) {
   const id = await getMaxidCounters();
+  console.log("max id counter: ", id);
   res.json({ success: true, payload: id });
 });
 
