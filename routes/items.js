@@ -6,6 +6,7 @@ const {
   getMaxTodoId,
   getAllData,
   deleteTodo,
+  strikeTodo,
 
   createCounter,
   incrementCounter,
@@ -54,6 +55,13 @@ router.delete("/todo/:id", async function (req, res) {
   return res.json({ success: true });
 });
 
+//PATCH strike through todo
+router.patch("/todo/strike", async function (req, res) {
+  let body = req.body;
+  strikeTodo(body);
+  return res.json({ success: true });
+});
+
 /*------------Counters------------*/
 //POST create counter
 router.post("/counter", async function (req, res) {
@@ -68,7 +76,7 @@ router.post("/counter", async function (req, res) {
 
 //PATCH counter increment
 router.patch("/counter/:id", async function (req, res) {
-  let id = req.params.id; //what's params
+  let id = req.params.id;
   console.log("id", id);
   incrementCounter(id);
   return res.json({ success: true });

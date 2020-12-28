@@ -35,18 +35,31 @@ async function deleteTodo(id) {
   return res;
 }
 
+//Patch: Strike through id
+async function strikeTodo(value) {
+  const res = await query(
+    `
+  UPDATE todos_react
+  SET status = $1
+  WHERE id = $2`,
+    [value.status, value.id]
+  );
+  console.log("models - strike todo", value);
+  return res;
+}
+
 /*------------Counters------------*/
 //Post counter value to DB
 async function createCounter(value) {
   const res = await query(
-    `INSERT INTO counters_react (counter, count)
-        values ($1, $2)`,
-    [value.counter, value.zero]
+    `INSERT INTO counters_react (counter, count, color)
+        values ($1, $2, $3)`,
+    [value.counter, value.zero, value.colour]
   );
   return res;
 }
 
-//Increment counter by id
+//Patch: Increment counter by id
 async function incrementCounter(id) {
   const res = await query(
     `UPDATE counters_react
@@ -57,7 +70,7 @@ async function incrementCounter(id) {
   return res;
 }
 
-//Decrement counter by id
+//Patch: Decrement counter by id
 async function decrementCounter(id) {
   const res = await query(`
   UPDATE counters_react
@@ -136,6 +149,7 @@ module.exports = {
   getMaxTodoId,
   getAllData,
   deleteTodo,
+  strikeTodo,
 
   createCounter,
   incrementCounter,
