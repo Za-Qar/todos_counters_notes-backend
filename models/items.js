@@ -5,11 +5,11 @@ const { query } = require("../db/index.js");
 //Post todo value to db
 async function createTodo(value) {
   const res = await query(
-    `INSERT INTO todos_react (todo)
-        values ($1)`,
-    [value]
+    `INSERT INTO todos_react (todo, color)
+        values ($1, $2)`,
+    [value.todo, value.colour]
   );
-
+  console.log("here are the items.js values: ", value.todo, value.colour);
   return res;
 }
 

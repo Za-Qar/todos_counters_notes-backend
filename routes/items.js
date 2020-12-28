@@ -28,7 +28,7 @@ router.post("/createTodo", async function (req, res) {
   // if (!body.todo) {
   //   return res.send("404 Error");
   // }
-  const items = await createTodo(body.todo);
+  const items = await createTodo(body);
   console.log("router", items);
   console.log("router", body);
   res.json(items);
