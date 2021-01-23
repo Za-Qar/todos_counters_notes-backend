@@ -3,10 +3,10 @@ var router = express.Router();
 
 const {
   createTodo,
-  getMaxTodoId,
   getAllData,
   deleteTodo,
   strikeTodo,
+  //   getMaxTodoId,
 } = require("../models/todos");
 
 /*------------Todos------------*/
@@ -21,12 +21,6 @@ router.post("/", async function (req, res) {
   console.log("router", items);
   console.log("router", body);
   res.json(items);
-});
-
-//GET todo max id
-router.get("/maxId", async function (req, res) {
-  const id = await getMaxTodoId();
-  res.json({ success: true, payload: id });
 });
 
 /* GET all notes */
@@ -49,5 +43,11 @@ router.patch("/", async function (req, res) {
   strikeTodo(body);
   return res.json({ success: true });
 });
+
+// //GET todo max id
+// router.get("/maxId", async function (req, res) {
+//   const id = await getMaxTodoId();
+//   res.json({ success: true, payload: id });
+// });
 
 module.exports = router;

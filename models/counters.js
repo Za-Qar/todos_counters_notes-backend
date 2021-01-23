@@ -11,7 +11,7 @@ async function createCounter(value) {
     `,
     [value.counter, value.zero, value.colour]
   );
-  return res;
+  return res.rows;
 }
 
 //Patch: Increment counter by id

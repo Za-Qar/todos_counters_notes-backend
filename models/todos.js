@@ -16,14 +16,6 @@ async function createTodo(value) {
   return res.rows;
 }
 
-//Get newest todo id
-async function getMaxTodoId() {
-  const res = await query(
-    `SELECT id FROM todos_react WHERE id=(SELECT max(id) FROM todos_react)`
-  );
-  return res.rows;
-}
-
 //Get all todos
 async function getAllData() {
   const res = await query(`SELECT * FROM todos_react ORDER BY id ASC`);
@@ -51,10 +43,18 @@ async function strikeTodo(value) {
   return res;
 }
 
+// //Get newest todo id
+// async function getMaxTodoId() {
+//   const res = await query(
+//     `SELECT id FROM todos_react WHERE id=(SELECT max(id) FROM todos_react)`
+//   );
+//   return res.rows;
+// }
+
 module.exports = {
   createTodo,
-  getMaxTodoId,
   getAllData,
   deleteTodo,
   strikeTodo,
+  //   getMaxTodoId,
 };

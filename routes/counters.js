@@ -23,7 +23,7 @@ router.post("/", async function (req, res) {
 });
 
 //PATCH counter increment
-router.patch("/:id", async function (req, res) {
+router.patch("/increment/:id", async function (req, res) {
   let id = req.params.id;
   console.log("id", id);
   incrementCounter(id);
