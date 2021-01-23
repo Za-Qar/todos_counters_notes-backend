@@ -116,10 +116,7 @@ router.get("/counter", async function (req, res) {
 router.post("/note", async function (req, res) {
   let body = req.body;
 
-  console.log(
-    "this is the post value (body) in routes/items.js line 111: ",
-    body
-  );
+  console.log("this is the post value Notes: ", body);
 
   const items = await createNote(body);
   res.json(items);

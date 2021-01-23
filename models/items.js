@@ -106,14 +106,11 @@ async function getAllCounters() {
 /*---------------Notes-----------------*/
 //POST note
 async function createNote(value) {
-  console.log(
-    "this is the value and textValue in models/items.js line 98: ",
-    value
-  );
+  console.log("this is the value in models/items.js notes: ", value);
   const res = await query(
-    `INSERT INTO notes_react (title, text)
-        values ($1, $2)`,
-    [value.title, value.text]
+    `INSERT INTO notes_react (title, text, color)
+        values ($1, $2, $3)`,
+    [value.title, value.text, value.colour]
   );
   return res;
 }
