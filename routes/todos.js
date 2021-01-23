@@ -30,7 +30,7 @@ router.get("/maxId", async function (req, res) {
 });
 
 /* GET all notes */
-router.get("/todo", async function (req, res) {
+router.get("/", async function (req, res) {
   const items = await getAllData();
   res.json({ success: true, payload: items });
 });
@@ -49,3 +49,5 @@ router.patch("/", async function (req, res) {
   strikeTodo(body);
   return res.json({ success: true });
 });
+
+module.exports = router;

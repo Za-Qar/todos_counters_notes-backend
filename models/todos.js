@@ -6,11 +6,14 @@ const { query } = require("../db/index.js");
 async function createTodo(value) {
   const res = await query(
     `INSERT INTO todos_react (todo, color)
-          values ($1, $2)`,
+          VALUES ($1, $2)
+    RETURNING *
+    `,
     [value.todo, value.colour]
   );
   console.log("here are the items.js values: ", value.todo, value.colour);
-  return res;
+  console.log("this is res: ", res.rows);
+  return res.rows;
 }
 
 //Get newest todo id
@@ -23,7 +26,7 @@ async function getMaxTodoId() {
 
 //Get all todos
 async function getAllData() {
-  const res = await query(`SELECT * FROM todos_react`);
+  const res = await query(`SELECT * FROM todos_react ORDER BY id ASC`);
   console.log(res.rows);
   return res.rows;
 }

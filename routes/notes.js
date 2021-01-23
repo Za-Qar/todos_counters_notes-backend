@@ -10,7 +10,7 @@ const {
 
 /*------------Notes------------*/
 //POST note
-router.post("/note", async function (req, res) {
+router.post("/", async function (req, res) {
   let body = req.body;
 
   console.log("this is the post value Notes: ", body);
@@ -20,19 +20,19 @@ router.post("/note", async function (req, res) {
 });
 
 //GET note max id
-router.get("/note/getMaxNoteId", async function (req, res) {
+router.get("/getMaxNoteId", async function (req, res) {
   const id = await getMaxNoteId();
   res.json({ success: true, payload: id });
 });
 
 //GET all notes
-router.get("/note", async function (req, res) {
+router.get("/", async function (req, res) {
   const notes = await getAllNotes();
   res.json({ success: true, payload: notes });
 });
 
 //DELETE note
-router.delete("/note/:id", async function (req, res) {
+router.delete("/:id", async function (req, res) {
   let id = req.params.id;
 
   console.log("---------------------------delete note id, routes: ", id);

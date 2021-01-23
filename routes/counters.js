@@ -58,3 +58,5 @@ router.get("/", async function (req, res) {
   const items = await getAllCounters();
   res.json({ success: true, payload: items });
 });
+
+module.exports = router;
