@@ -1,17 +1,29 @@
 const { query } = require("../db/index.js");
+var CryptoJS = require("crypto-js");
 
 /*------------Todos------------*/
 
 //Post todo value to db
 async function createTodo(value) {
+  // Encrypt
+  var cipherTodo = CryptoJS.AES.encrypt(
+    `${value.todo}`,
+    `${process.env.ENCRYPTION_HASH}`
+  ).toString();
+
+  var cipherColour = CryptoJS.AES.encrypt(
+    `${value.colour}`,
+    `${process.env.ENCRYPTION_HASH}`
+  ).toString();
+
   const res = await query(
     `INSERT INTO todos_react (todo, color)
           VALUES ($1, $2)
     RETURNING *
     `,
-    [value.todo, value.colour]
+    [cipherTodo, cipherColour]
   );
-  console.log("here are the items.js values: ", value.todo, value.colour);
+
   console.log("this is res: ", res.rows);
   return res.rows;
 }
@@ -19,8 +31,35 @@ async function createTodo(value) {
 //Get all todos
 async function getAllData() {
   const res = await query(`SELECT * FROM todos_react ORDER BY id ASC`);
-  console.log(res.rows);
-  return res.rows;
+  console.log("this is res.rows: ", res.rows);
+
+  const todos = res.rows.map((item) => {
+    console.log("this is item: ", item.todo);
+    // Decrypt
+    var decryptingTodo = CryptoJS.AES.decrypt(
+      `${item.todo}`,
+      `${process.env.ENCRYPTION_HASH}`
+    );
+    var decryptedTodo = decryptingTodo.toString(CryptoJS.enc.Utf8);
+
+    // Decrypt
+    var decryptingColour = CryptoJS.AES.decrypt(
+      `${item.color}`,
+      `${process.env.ENCRYPTION_HASH}`
+    );
+    var decryptedColour = decryptingColour.toString(CryptoJS.enc.Utf8);
+
+    return {
+      id: item.id,
+      todo: decryptedTodo,
+      color: decryptedColour,
+      status: item.status,
+    };
+  });
+
+  console.log("these are the todos: ", todos);
+
+  return todos;
 }
 
 //Delete todo from db
@@ -58,3 +97,21 @@ module.exports = {
   strikeTodo,
   //   getMaxTodoId,
 };
+
+// // Encrypt
+// var ciphertext = CryptoJS.AES.encrypt(
+//   "my message",
+//   `${process.env.ENCRYPTION_HASH}`
+// ).toString();
+
+// console.log(ciphertext);
+
+// // Decrypt
+// var bytes = CryptoJS.AES.decrypt(ciphertext, `${process.env.ENCRYPTION_HASH}`);
+// var originalText = bytes.toString(CryptoJS.enc.Utf8);
+// console.log(originalText); // 'my message'
+
+// // var hashSHA512 = CryptoJS.SHA512("Message", "Secret Passphrase");
+// // console.log("hashSHA512", hashSHA512);
+// // var hashHmacSHA512 = CryptoJS.HmacSHA512("Message", "Secret Passphrase");
+// // console.log("hashHmacSHA512", hashHmacSHA512);

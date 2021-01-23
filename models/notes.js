@@ -1,13 +1,30 @@
 const { query } = require("../db/index.js");
+var CryptoJS = require("crypto-js");
 
 /*---------------Notes-----------------*/
 //POST note
 async function createNote(value) {
-  console.log("this is the value in models/items.js notes: ", value);
+  // Encrypt
+  var cipherTitle = CryptoJS.AES.encrypt(
+    value.title,
+    process.env.ENCRYPTION_HASH
+  ).toString();
+
+  var cipherText = CryptoJS.AES.encrypt(
+    value.text,
+    process.env.ENCRYPTION_HASH
+  ).toString();
+
+  var cipherColour = CryptoJS.AES.encrypt(
+    value.colour,
+    process.env.ENCRYPTION_HASH
+  ).toString();
+
   const res = await query(
     `INSERT INTO notes_react (title, text, color)
         values ($1, $2, $3)`,
     [value.title, value.text, value.colour]
+    // [cipherTitle, cipherText, cipherColour]
   );
   return res;
 }
