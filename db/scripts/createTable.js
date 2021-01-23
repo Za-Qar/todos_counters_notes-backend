@@ -44,6 +44,19 @@ async function createTableNotes() {
 
 createTableNotes();
 
+async function createTableEmails() {
+  let res = await query(
+    `CREATE TABLE notes_react(
+      id SERIAL PRIMARY KEY,
+      title TEXT,
+      text TEXT,
+      color TEXT,
+      status TEXT
+    )`
+  );
+  console.log(res);
+}
+
 // async function dropItems() {
 //   let res = await query(`DROP TABLE notes_react `);
 //   console.log(res);
