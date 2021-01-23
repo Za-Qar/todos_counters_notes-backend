@@ -23,18 +23,14 @@ async function createTodo(value) {
     `,
     [cipherTodo, cipherColour]
   );
-
-  console.log("this is res: ", res.rows);
   return res.rows;
 }
 
 //Get all todos
 async function getAllData() {
   const res = await query(`SELECT * FROM todos_react ORDER BY id ASC`);
-  console.log("this is res.rows: ", res.rows);
 
   const todos = res.rows.map((item) => {
-    console.log("this is item: ", item.todo);
     // Decrypt
     var decryptingTodo = CryptoJS.AES.decrypt(
       `${item.todo}`,
@@ -56,9 +52,6 @@ async function getAllData() {
       status: item.status,
     };
   });
-
-  console.log("these are the todos: ", todos);
-
   return todos;
 }
 
