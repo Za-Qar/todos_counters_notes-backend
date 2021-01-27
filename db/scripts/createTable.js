@@ -21,7 +21,8 @@ async function createTableCounter() {
       counter TEXT,
       count INTEGER,
       color TEXT,
-      status TEXT
+      status TEXT,
+      email TEXT
     )`
   );
   console.log(res);
@@ -36,7 +37,8 @@ async function createTableNotes() {
       title TEXT,
       text TEXT,
       color TEXT,
-      status TEXT
+      status TEXT,
+      email TEXT
     )`
   );
   console.log(res);
