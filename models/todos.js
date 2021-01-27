@@ -52,6 +52,7 @@ async function getAllData() {
       status: item.status,
     };
   });
+
   return todos;
 }
 
@@ -108,3 +109,11 @@ module.exports = {
 // // console.log("hashSHA512", hashSHA512);
 // // var hashHmacSHA512 = CryptoJS.HmacSHA512("Message", "Secret Passphrase");
 // // console.log("hashHmacSHA512", hashHmacSHA512);
+
+var hash = CryptoJS.SHA1("Message");
+
+var ciphertext = CryptoJS.AES.encrypt(
+  "my message",
+  `${process.env.ENCRYPTION_HASH}`
+).toString();
+console.log(ciphertext);

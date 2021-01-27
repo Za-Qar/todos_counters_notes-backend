@@ -22,11 +22,13 @@ async function createNote(value) {
 
   const res = await query(
     `INSERT INTO notes_react (title, text, color)
-        values ($1, $2, $3)`,
+        VALUES ($1, $2, $3)
+      RETURNING *
+    `,
     [value.title, value.text, value.colour]
     // [cipherTitle, cipherText, cipherColour]
   );
-  return res;
+  return res.rows;
 }
 
 //GET newest note id
@@ -39,7 +41,7 @@ async function getMaxNoteId() {
 
 //GET all notes
 async function getAllNotes() {
-  const res = await query(`SELECT * FROM notes_react`);
+  const res = await query(`SELECT * FROM notes_react ORDER BY id ASC`);
   console.log("This is the get all notes id", res.rows);
   return res.rows;
 }

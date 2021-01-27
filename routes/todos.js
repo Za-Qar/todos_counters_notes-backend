@@ -12,19 +12,19 @@ const {
 /*------------Todos------------*/
 //POST create todo
 router.post("/", async function (req, res) {
-  console.log("this is the post");
+  console.log("this is the post: ", req.body);
   let body = req.body;
   // if (!body.todo) {
   //   return res.send("404 Error");
   // }
+  console.log("this is post todo body: ", body);
   const items = await createTodo(body);
-  console.log("router", items);
-  console.log("router", body);
   res.json(items);
 });
 
-/* GET all notes */
+/* GET all todos */
 router.get("/", async function (req, res) {
+  // let email = req.params.email;
   const items = await getAllData();
   res.json({ success: true, payload: items });
 });
