@@ -32,7 +32,6 @@ router.get("/", async function (req, res) {
 //DELTE todo
 router.delete("/:id", async function (req, res) {
   let id = req.params.id;
-  console.log("delete id, routes", id);
   deleteTodo(id);
   return res.json({ success: true });
 });
