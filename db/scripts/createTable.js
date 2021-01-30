@@ -6,7 +6,8 @@ async function createTableTodo() {
             id SERIAL PRIMARY KEY,
             todo TEXT,
             color TEXT,
-            status TEXT
+            status TEXT,
+            email TEXT
         )`
   );
   console.log(res);
@@ -47,7 +48,7 @@ async function createTableNotes() {
 createTableNotes();
 
 // async function dropItems() {
-//   let res = await query(`DROP TABLE notes_react `);
+//   let res = await query(`DROP TABLE counters_react`);
 //   console.log(res);
 // }
 // dropItems();

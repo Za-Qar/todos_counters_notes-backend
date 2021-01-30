@@ -17,11 +17,11 @@ async function createTodo(value) {
   ).toString();
 
   const res = await query(
-    `INSERT INTO todos_react (todo, color)
-          VALUES ($1, $2)
+    `INSERT INTO todos_react (todo, color, email)
+          VALUES ($1, $2, $3)
     RETURNING *
     `,
-    [cipherTodo, cipherColour]
+    [cipherTodo, cipherColour, value.email]
   );
   return res.rows;
 }
@@ -50,6 +50,7 @@ async function getAllData() {
       todo: decryptedTodo,
       color: decryptedColour,
       status: item.status,
+      email: item.email,
     };
   });
 
