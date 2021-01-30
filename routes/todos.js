@@ -24,8 +24,8 @@ router.post("/", async function (req, res) {
 
 /* GET all todos */
 router.get("/", async function (req, res) {
-  // let email = req.params.email;
-  const items = await getAllData();
+  let email = req.query.email;
+  const items = await getAllData(email);
   res.json({ success: true, payload: items });
 });
 

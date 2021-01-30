@@ -27,8 +27,13 @@ async function createTodo(value) {
 }
 
 //Get all todos
-async function getAllData() {
-  const res = await query(`SELECT * FROM todos_react ORDER BY id ASC`);
+async function getAllData(email) {
+  const res = await query(
+    `SELECT * FROM todos_react WHERE email = $1 ORDER BY id ASC`,
+    [email]
+  );
+
+  console.log("this is res.rows :", res.rows);
 
   const todos = res.rows.map((item) => {
     // Decrypt
