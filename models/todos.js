@@ -9,8 +9,6 @@ async function createTodo(value) {
     value.email = "loggedOut";
   }
 
-  console.log("this is value.email: ", value.email);
-
   // Encrypt
   var cipherTodo = CryptoJS.AES.encrypt(
     `${value.todo}`,
@@ -42,7 +40,6 @@ async function getAllData(email) {
     `SELECT * FROM todos_react WHERE email = $1 ORDER BY id ASC`,
     [email]
   );
-
   const todos = res.rows.map((item) => {
     // Decrypt
     var decryptingTodo = CryptoJS.AES.decrypt(
