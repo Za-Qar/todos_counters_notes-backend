@@ -8,6 +8,7 @@ const {
   getMaxidCounters,
   deleteCounter,
   getAllCounters,
+  strikeCounter,
 } = require("../models/counters");
 
 /*------------Counters------------*/
@@ -54,6 +55,13 @@ router.get("/", async function (req, res) {
   let { email } = req.query;
   const items = await getAllCounters(email);
   res.json({ success: true, payload: items });
+});
+
+//PATCH strike through counter
+router.patch("/", async function (req, res) {
+  let body = req.body;
+  strikeCounter(body);
+  return res.json({ success: true });
 });
 
 module.exports = router;

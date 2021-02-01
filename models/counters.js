@@ -50,6 +50,19 @@ async function decrementCounter(id) {
   return res;
 }
 
+//Patch: Strike through id
+async function strikeCounter(value) {
+  const res = await query(
+    `
+    UPDATE counters_react
+    SET status = $1
+    WHERE id = $2`,
+    [value.status, value.id]
+  );
+  console.log("models - strike counter", value);
+  return res;
+}
+
 //Get newest counter id
 async function getMaxidCounters() {
   const res = await query(
@@ -111,4 +124,5 @@ module.exports = {
   getMaxidCounters,
   deleteCounter,
   getAllCounters,
+  strikeCounter,
 };
