@@ -5,6 +5,10 @@ var CryptoJS = require("crypto-js");
 
 //Post todo value to db
 async function createTodo(value) {
+  if (value.email === undefined) {
+    value.email = "loggedOut";
+  }
+
   // Encrypt
   var cipherTodo = CryptoJS.AES.encrypt(
     `${value.todo}`,
@@ -17,19 +21,25 @@ async function createTodo(value) {
   ).toString();
 
   const res = await query(
-    `INSERT INTO todos_react (todo, color)
-          VALUES ($1, $2)
+    `INSERT INTO todos_react (todo, color, email)
+          VALUES ($1, $2, $3)
     RETURNING *
     `,
-    [cipherTodo, cipherColour]
+    [cipherTodo, cipherColour, value.email]
   );
   return res.rows;
 }
 
 //Get all todos
-async function getAllData() {
-  const res = await query(`SELECT * FROM todos_react ORDER BY id ASC`);
+async function getAllData(email) {
+  if (email === undefined) {
+    email = "loggedOut";
+  }
 
+  const res = await query(
+    `SELECT * FROM todos_react WHERE email = $1 ORDER BY id ASC`,
+    [email]
+  );
   const todos = res.rows.map((item) => {
     // Decrypt
     var decryptingTodo = CryptoJS.AES.decrypt(
@@ -50,6 +60,7 @@ async function getAllData() {
       todo: decryptedTodo,
       color: decryptedColour,
       status: item.status,
+      email: item.email,
     };
   });
 

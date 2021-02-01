@@ -4,6 +4,10 @@ var CryptoJS = require("crypto-js");
 /*---------------Notes-----------------*/
 //POST note
 async function createNote(value) {
+  if (value.email === undefined) {
+    value.email = "loggedOut";
+  }
+
   // Encrypt
   var cipherTitle = CryptoJS.AES.encrypt(
     value.title,
@@ -21,12 +25,11 @@ async function createNote(value) {
   ).toString();
 
   const res = await query(
-    `INSERT INTO notes_react (title, text, color)
-        VALUES ($1, $2, $3)
+    `INSERT INTO notes_react (title, text, color, email)
+        VALUES ($1, $2, $3, $4)
       RETURNING *
     `,
-    [value.title, value.text, value.colour]
-    // [cipherTitle, cipherText, cipherColour]
+    [cipherTitle, cipherText, cipherColour, value.email]
   );
   return res.rows;
 }
@@ -40,20 +43,53 @@ async function getMaxNoteId() {
 }
 
 //GET all notes
-async function getAllNotes() {
-  const res = await query(`SELECT * FROM notes_react ORDER BY id ASC`);
-  console.log("This is the get all notes id", res.rows);
-  return res.rows;
+async function getAllNotes(email) {
+  if (email === undefined) {
+    email = "loggedOut";
+  }
+  const res = await query(
+    `SELECT * FROM notes_react WHERE email = $1 ORDER BY id ASC`,
+    [email]
+  );
+
+  const notes = res.rows.map((item) => {
+    // Decrypt
+    var decryptingText = CryptoJS.AES.decrypt(
+      `${item.text}`,
+      `${process.env.ENCRYPTION_HASH}`
+    );
+    var decryptedText = decryptingText.toString(CryptoJS.enc.Utf8);
+
+    // Decrypt
+    var decryptingTitle = CryptoJS.AES.decrypt(
+      `${item.title}`,
+      `${process.env.ENCRYPTION_HASH}`
+    );
+    var decryptedTitle = decryptingTitle.toString(CryptoJS.enc.Utf8);
+
+    // Decrypt
+    var decryptingColour = CryptoJS.AES.decrypt(
+      `${item.color}`,
+      `${process.env.ENCRYPTION_HASH}`
+    );
+    var decryptedColour = decryptingColour.toString(CryptoJS.enc.Utf8);
+
+    return {
+      id: item.id,
+      title: decryptedTitle,
+      text: decryptedText,
+      color: decryptedColour,
+      status: item.status,
+      email: item.email,
+    };
+  });
+
+  return notes;
 }
 
 //DELETE note from db
 async function deleteNote(id) {
-  console.log(
-    "------------------------------------note id to be deleted: ",
-    id
-  );
   const res = await query(`DELETE FROM notes_react WHERE id=${id};`);
-  console.log("delete id from deleteNote in models/items.js: ", res);
   return res;
 }
 

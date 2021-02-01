@@ -1,15 +1,31 @@
 const { query } = require("../db/index.js");
+var CryptoJS = require("crypto-js");
 
 /*------------Counters------------*/
 //Post counter value to DB
 async function createCounter(value) {
+  if (value.email === undefined) {
+    value.email = "loggedOut";
+  }
+
+  // Encrypt
+  var cipherCounter = CryptoJS.AES.encrypt(
+    `${value.counter}`,
+    `${process.env.ENCRYPTION_HASH}`
+  ).toString();
+
+  var cipherColour = CryptoJS.AES.encrypt(
+    `${value.colour}`,
+    `${process.env.ENCRYPTION_HASH}`
+  ).toString();
+
   const res = await query(
-    `INSERT INTO counters_react (counter, count, color)
+    `INSERT INTO counters_react (counter, count, color, email)
     VALUES 
-        ($1, $2, $3) 
+        ($1, $2, $3, $4) 
     RETURNING *
     `,
-    [value.counter, value.zero, value.colour]
+    [cipherCounter, value.zero, cipherColour, value.email]
   );
   return res.rows;
 }
@@ -21,7 +37,7 @@ async function incrementCounter(id) {
       SET count = count + 1
       WHERE id = ${id}`
   );
-  console.log("models - increment counter", id);
+
   return res;
 }
 
@@ -31,7 +47,19 @@ async function decrementCounter(id) {
   UPDATE counters_react
   SET count = count - 1
   WHERE id = ${id}`);
-  console.log("models - decrement counter", id);
+  return res;
+}
+
+//Patch: Strike through id
+async function strikeCounter(value) {
+  const res = await query(
+    `
+    UPDATE counters_react
+    SET status = $1
+    WHERE id = $2`,
+    [value.status, value.id]
+  );
+  console.log("models - strike counter", value);
   return res;
 }
 
@@ -45,17 +73,48 @@ async function getMaxidCounters() {
 
 //Delete counter from db
 async function deleteCounter(id) {
-  console.log("counter id to be deleted", id);
   const res = await query(`DELETE FROM counters_react WHERE id=${id};`);
-  console.log("delete id from deleteCounter in models/items.js: ", res);
+
   return res;
 }
 
 //Get all Counters
-async function getAllCounters() {
-  const res = await query(`SELECT * FROM counters_react`);
-  console.log("This is the get all counters id", res.rows);
-  return res.rows;
+async function getAllCounters(email) {
+  if (email === undefined) {
+    email = "loggedOut";
+  }
+
+  const res = await query(
+    `SELECT * FROM counters_react WHERE email = $1 ORDER BY id ASC`,
+    [email]
+  );
+
+  const counter = res.rows.map((item) => {
+    // Decrypt
+    var decryptingCounter = CryptoJS.AES.decrypt(
+      `${item.counter}`,
+      `${process.env.ENCRYPTION_HASH}`
+    );
+    var decryptedCounter = decryptingCounter.toString(CryptoJS.enc.Utf8);
+
+    // Decrypt
+    var decryptingColour = CryptoJS.AES.decrypt(
+      `${item.color}`,
+      `${process.env.ENCRYPTION_HASH}`
+    );
+    var decryptedColour = decryptingColour.toString(CryptoJS.enc.Utf8);
+
+    return {
+      id: item.id,
+      counter: decryptedCounter,
+      count: item.count,
+      color: decryptedColour,
+      status: item.status,
+      email: item.email,
+    };
+  });
+
+  return counter;
 }
 
 module.exports = {
@@ -65,4 +124,5 @@ module.exports = {
   getMaxidCounters,
   deleteCounter,
   getAllCounters,
+  strikeCounter,
 };
