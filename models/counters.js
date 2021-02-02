@@ -20,7 +20,7 @@ async function createCounter(value) {
   ).toString();
 
   const res = await query(
-    `INSERT INTO counters_react (counter, count, color, email)
+    `INSERT INTO counters_react (counter, count, colour, email)
     VALUES 
         ($1, $2, $3, $4) 
     RETURNING *
@@ -99,7 +99,7 @@ async function getAllCounters(email) {
 
     // Decrypt
     var decryptingColour = CryptoJS.AES.decrypt(
-      `${item.color}`,
+      `${item.colour}`,
       `${process.env.ENCRYPTION_HASH}`
     );
     var decryptedColour = decryptingColour.toString(CryptoJS.enc.Utf8);
@@ -108,7 +108,7 @@ async function getAllCounters(email) {
       id: item.id,
       counter: decryptedCounter,
       count: item.count,
-      color: decryptedColour,
+      colour: decryptedColour,
       status: item.status,
       email: item.email,
     };

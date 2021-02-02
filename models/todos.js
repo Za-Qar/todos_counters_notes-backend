@@ -21,7 +21,7 @@ async function createTodo(value) {
   ).toString();
 
   const res = await query(
-    `INSERT INTO todos_react (todo, color, email)
+    `INSERT INTO todos_react (todo, colour, email)
           VALUES ($1, $2, $3)
     RETURNING *
     `,
@@ -50,7 +50,7 @@ async function getAllData(email) {
 
     // Decrypt
     var decryptingColour = CryptoJS.AES.decrypt(
-      `${item.color}`,
+      `${item.colour}`,
       `${process.env.ENCRYPTION_HASH}`
     );
     var decryptedColour = decryptingColour.toString(CryptoJS.enc.Utf8);
@@ -58,7 +58,7 @@ async function getAllData(email) {
     return {
       id: item.id,
       todo: decryptedTodo,
-      color: decryptedColour,
+      colour: decryptedColour,
       status: item.status,
       email: item.email,
     };

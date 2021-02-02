@@ -25,7 +25,7 @@ async function createNote(value) {
   ).toString();
 
   const res = await query(
-    `INSERT INTO notes_react (title, text, color, email)
+    `INSERT INTO notes_react (title, text, colour, email)
         VALUES ($1, $2, $3, $4)
       RETURNING *
     `,
@@ -69,7 +69,7 @@ async function getAllNotes(email) {
 
     // Decrypt
     var decryptingColour = CryptoJS.AES.decrypt(
-      `${item.color}`,
+      `${item.colour}`,
       `${process.env.ENCRYPTION_HASH}`
     );
     var decryptedColour = decryptingColour.toString(CryptoJS.enc.Utf8);
@@ -78,7 +78,7 @@ async function getAllNotes(email) {
       id: item.id,
       title: decryptedTitle,
       text: decryptedText,
-      color: decryptedColour,
+      colour: decryptedColour,
       status: item.status,
       email: item.email,
     };

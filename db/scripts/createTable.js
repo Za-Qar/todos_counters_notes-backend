@@ -5,7 +5,7 @@ async function createTableTodo() {
     `CREATE TABLE todos_react(
             id SERIAL PRIMARY KEY,
             todo TEXT,
-            color TEXT,
+            colour TEXT,
             status TEXT,
             email TEXT
         )`
@@ -21,7 +21,7 @@ async function createTableCounter() {
       id SERIAL PRIMARY KEY,
       counter TEXT,
       count INTEGER,
-      color TEXT,
+      colour TEXT,
       status TEXT,
       email TEXT
     )`
@@ -37,7 +37,7 @@ async function createTableNotes() {
       id SERIAL PRIMARY KEY,
       title TEXT,
       text TEXT,
-      color TEXT,
+      colour TEXT,
       status TEXT,
       email TEXT
     )`
@@ -48,7 +48,9 @@ async function createTableNotes() {
 createTableNotes();
 
 // async function dropItems() {
-//   let res = await query(`DROP TABLE counters_react`);
-//   console.log(res);
+//   let count = await query(`DROP TABLE counters_react`);
+//   let note = await query(`DROP TABLE notes_react`);
+//   let todo = await query(`DROP TABLE todos_react`);
+//   console.log(count, note, todo);
 // }
 // dropItems();
